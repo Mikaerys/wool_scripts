@@ -1,0 +1,25 @@
+name: Sync with Upstream
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天北京时间早上 8 点（UTC 0 点）自动同步
+  workflow_dispatch:    # 允许你在网页端点击按钮手动触发
+
+jobs:
+  sync_latest_from_upstream:
+    runs-on: ubuntu-latest
+    name: Sync latest commits from upstream repo
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Sync upstream changes
+        id: sync
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          upstream_sync_repo: fmz200/wool_scripts
+          upstream_sync_branch: main
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
